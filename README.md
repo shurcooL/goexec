@@ -21,8 +21,8 @@ echo parameters | goe [package ...] function
 goe [package ...] function1 | goe [package ...] function2
 ```
 
-Example
------
+Examples
+--------
 ```bash
 $ goe strings 'Repeat("Go! ", 5)'
 (string)("Go! Go! Go! Go! Go!")
