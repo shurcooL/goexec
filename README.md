@@ -9,7 +9,7 @@ Installation
 $ go get -u github.com/shurcooL/goe
 ```
 
-Add `$GOPATH/bin` to your `$PATH`.
+Add `$GOPATH/bin` to your `$PATH` or use `$GOPATH/bin/goe`.
 
 Usage
 -----
