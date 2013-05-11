@@ -4,12 +4,37 @@ import (
 	"fmt"
 	. "gist.github.com/5498057.git"
 	"github.com/shurcooL/go-goon"
-	"github.com/sriram-srinivasan/gore/eval"
+	. "gist.github.com/5286084.git"
 	"os"
 	"strings"
+	"os/exec"
+	"path"
+	"io/ioutil"
 )
 
 var _ = goon.Dump
+
+func run(src string) (output string, error string) {
+	tempDir, err := ioutil.TempDir("", "goe_")
+	CheckError(err)
+
+	tempFile := path.Join(tempDir, "gen.go")
+	err = ioutil.WriteFile(tempFile, []byte(src), 0600)
+	CheckError(err)
+
+	cmd := exec.Command("go", "run", tempFile)
+	out, err := cmd.CombinedOutput()
+
+	err = os.RemoveAll(tempDir)
+	CheckError(err)
+
+	if nil == err {
+		return string(out), ""
+	} else {
+		return "", string(out)
+	}
+	panic(nil)		// TODO: Remove in go1.1
+}
 
 func main() {
 	//os.Args = []string{`./goe`, `strings`, `Repeat("Go! ", 5)`}
@@ -23,23 +48,26 @@ func main() {
 		return
 	}
 
-	x := os.Args[1:]
-	imports := x[:len(x)-1]
+	Args := os.Args[1:]
+	imports := Args[:len(Args)-1]		// All but last
 	//goon.Dump(imports)
-	cmd := x[len(x)-1]
+	cmd := Args[len(Args)-1]			// Last one
 	//goon.Dump(cmd)
 
-	src := "import \"github.com/shurcooL/go-goon\"\n" // TODO: Check that it hasn't been imported manually
+	src := "package main\n\nimport (\n\t\"github.com/shurcooL/go-goon\"\n" // TODO: Check that it hasn't been imported manually
 	for _, importPath := range imports {
-		src += "import . \"" + importPath + "\"\n"
+		src += "\t. \"" + importPath + "\"\n"
 	}
-	if -1 == strings.Index(cmd, "(") {
+	if -1 == strings.Index(cmd, "(") {		// BUG: What if the bracket is a part of a comment or a string...
 		cmd += "(" + ReadAllStdin() + ")"
 	}
+	src += ")\n\nfunc main() {\n\t"
 	src += "goon.Dump(" + cmd + ")" // TODO: DumpComma
+	src += "\n}"
 
 	//print(src); return
-	out, err := eval.Eval(src)
+	//out, err := eval.Eval(src)
+	out, err := run(src)
 
 	if err == "" {
 		fmt.Print(out)
