@@ -16,7 +16,7 @@ Usage
 ```
 goe [package ...] function(parameters)
 
-echo parameters | goe [package ...] function
+echo -n parameters | goe [package ...] function
 
 goe [package ...] function1 | goe [package ...] function2
 ```
@@ -31,14 +31,14 @@ $ goe strings 'Replace("Calling Go functions from the terminal is hard.", "hard"
 (string)("Calling Go functions from the terminal is easy.")
 
 # Dumps the doc.Package struct for "fmt"
-$ echo '"fmt"' | goe gist.github.com/5504644.git GetDocPackage
+$ echo -n '"fmt"' | goe gist.github.com/5504644.git GetDocPackage
 (*doc.Package)(...)
 
-$ echo '"fmt"' | goe gist.github.com/4727543.git GetForcedUse
+$ echo -n '"fmt"' | goe gist.github.com/4727543.git GetForcedUse
 (string)("var _ = fmt.Errorf")
 
 # Note that regexp.Compile returns 2 values (*regexp.Regexp, error)
-$ echo '"Go+"' | goe regexp Compile
+$ echo -n '"Go+"' | goe regexp Compile
 (*regexp.Regexp)(...),
 (interface{})(nil)
 ```
