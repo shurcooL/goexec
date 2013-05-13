@@ -33,7 +33,6 @@ func run(src string) (output string, error string) {
 	} else {
 		return "", string(out)
 	}
-	panic(nil)		// TODO: Remove in go1.1
 }
 
 func main() {
