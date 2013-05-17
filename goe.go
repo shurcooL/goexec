@@ -23,6 +23,7 @@ func run(src string) (output string, error string) {
 	CheckError(err)
 
 	cmd := exec.Command("go", "run", tempFile)
+	cmd.Stdin = os.Stdin
 	out, err := cmd.CombinedOutput()
 
 	err = os.RemoveAll(tempDir)
