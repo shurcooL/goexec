@@ -14,11 +14,11 @@ Add `$GOPATH/bin` to your `$PATH` or use `$GOPATH/bin/goe`.
 Usage
 -----
 ```
-goe [package ...] function(parameters)
+goe [--quiet] [package ...] function(parameters)
 
-echo -n parameters | goe [package ...] function
+echo -n parameters | goe [--quiet] [package ...] function
 
-goe [package ...] function1 | goe [package ...] function2
+goe [package ...] function1 | goe [--quiet] [package ...] function2
 ```
 
 Examples
@@ -41,4 +41,7 @@ $ echo -n '"fmt"' | goe gist.github.com/4727543.git GetForcedUse
 $ echo -n '"Go+"' | goe regexp Compile
 (*regexp.Regexp)(...),
 (interface{})(nil)
+
+$ goe --quiet fmt 'Println("Use --quiet to disable output of goon; useful if you want to print to stdout.")'
+Use --quiet to disable output of goon; useful if you want to print to stdout.
 ```

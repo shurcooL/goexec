@@ -36,6 +36,10 @@ func run(src string) (output string, error string) {
 	}
 }
 
+func usage() {
+	fmt.Println("Usage: ...")
+}
+
 func main() {
 	//os.Args = []string{`./goe`, `strings`, `Repeat("Go! ", 5)`}
 	//os.Args = []string{`./goe`, `strings`, `Replace("Calling Go functions from the terminal is hard.", "hard", "easy", -1)`}
@@ -43,18 +47,41 @@ func main() {
 	//os.Args = []string{`./goe`, `gist.github.com/4727543.git`, `GetForcedUse`}
 	//os.Args = []string{`./goe`, `regexp`, `Compile`}
 
-	if len(os.Args) <= 1 {
-		fmt.Println("Usage: ...")
+	type OutputType int
+	const (
+		Quiet = iota
+		Goon
+	)
+	Output := Goon
+
+	Args := os.Args[1:]
+
+	if len(Args) < 1 {
+		usage();
 		return
 	}
 
-	Args := os.Args[1:]
+	if "--quiet" == Args[0] {
+		Output = Quiet
+		Args = Args[1:]
+	}
+
+	if len(Args) < 1 {
+		usage();
+		return
+	}
+
 	imports := Args[:len(Args)-1]		// All but last
 	//goon.Dump(imports)
 	cmd := Args[len(Args)-1]			// Last one
 	//goon.Dump(cmd)
 
-	src := "package main\n\nimport (\n\t\"github.com/shurcooL/go-goon\"\n" // TODO: Check that it hasn't been imported manually
+	src := "package main\n\nimport (\n"
+	if Goon == Output {
+		// TODO: Check that it hasn't already been imported
+		src += "\t\"github.com/shurcooL/go-goon\"\n"
+	} else if Quiet == Output {
+	}
 	for _, importPath := range imports {
 		src += "\t. \"" + importPath + "\"\n"
 	}
@@ -62,7 +89,11 @@ func main() {
 		cmd += "(" + ReadAllStdin() + ")"
 	}
 	src += ")\n\nfunc main() {\n\t"
-	src += "goon.Dump(" + cmd + ")" // TODO: DumpComma
+	if Goon == Output {
+		src += "goon.Dump(" + cmd + ")" // TODO: DumpComma
+	} else if Quiet == Output {
+		src += cmd
+	}
 	src += "\n}"
 
 	//print(src); return
