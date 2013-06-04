@@ -37,9 +37,22 @@ $ echo -n '"fmt"' | goe gist.github.com/5504644.git GetDocPackage
 $ echo -n '"fmt"' | goe gist.github.com/4727543.git GetForcedUse
 (string)("var _ = fmt.Errorf")
 
-# Note that regexp.Compile returns 2 values (*regexp.Regexp, error)
-$ echo -n '"Go+"' | goe regexp Compile
-(*regexp.Regexp)(...),
+# Note that parser.ParseExpr returns 2 values (ast.Expr, error)
+$ goe go/parser 'ParseExpr("5 + 7")'
+(*ast.BinaryExpr)(&ast.BinaryExpr{
+	X: (*ast.BasicLit)(&ast.BasicLit{
+		ValuePos: (token.Pos)(1),
+		Kind:     (token.Token)(5),
+		Value:    (string)("5"),
+	}),
+	OpPos: (token.Pos)(3),
+	Op:    (token.Token)(12),
+	Y: (*ast.BasicLit)(&ast.BasicLit{
+		ValuePos: (token.Pos)(5),
+		Kind:     (token.Token)(5),
+		Value:    (string)("7"),
+	}),
+}),
 (interface{})(nil)
 
 $ goe --quiet fmt 'Println("Use --quiet to disable output of goon; useful if you want to print to stdout.")'
