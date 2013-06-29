@@ -16,7 +16,7 @@ Usage
 ```
 goe [--quiet] [package ...] function(parameters)
 
-echo -n parameters | goe [--quiet] [package ...] function
+echo parameters | goe [--quiet] [package ...] function
 
 goe [package ...] function1 | goe [--quiet] [package ...] function2
 ```
@@ -31,10 +31,10 @@ $ goe strings 'Replace("Calling Go functions from the terminal is hard.", "hard"
 (string)("Calling Go functions from the terminal is easy.")
 
 # Dumps the doc.Package struct for "fmt"
-$ echo -n '"fmt"' | goe gist.github.com/5504644.git GetDocPackage
+$ echo '"fmt"' | goe gist.github.com/5504644.git GetDocPackage
 (*doc.Package)(...)
 
-$ echo -n '"fmt"' | goe gist.github.com/4727543.git GetForcedUse
+$ echo '"fmt"' | goe gist.github.com/4727543.git GetForcedUse
 (string)("var _ = fmt.Errorf")
 
 # Note that parser.ParseExpr returns 2 values (ast.Expr, error)

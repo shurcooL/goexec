@@ -5,6 +5,7 @@ import (
 	. "gist.github.com/5498057.git"
 	"github.com/shurcooL/go-goon"
 	. "gist.github.com/5286084.git"
+	. "gist.github.com/5892738.git"
 	"os"
 	"strings"
 	"os/exec"
@@ -86,7 +87,7 @@ func main() {
 		src += "\t. \"" + importPath + "\"\n"
 	}
 	if -1 == strings.Index(cmd, "(") {		// BUG: What if the bracket is a part of a comment or a string...
-		cmd += "(" + ReadAllStdin() + ")"
+		cmd += "(" + TrimLastNewline(ReadAllStdin()) + ")"
 	}
 	src += ")\n\nfunc main() {\n\t"
 	if Goon == Output {
