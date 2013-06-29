@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	. "gist.github.com/5498057.git"
-	"github.com/shurcooL/go-goon"
 	. "gist.github.com/5286084.git"
+	. "gist.github.com/5498057.git"
 	. "gist.github.com/5892738.git"
+	"github.com/shurcooL/go-goon"
+	"io/ioutil"
 	"os"
-	"strings"
 	"os/exec"
 	"path"
-	"io/ioutil"
+	"strings"
 )
 
 var _ = goon.Dump
@@ -58,7 +58,7 @@ func main() {
 	Args := os.Args[1:]
 
 	if len(Args) < 1 {
-		usage();
+		usage()
 		return
 	}
 
@@ -68,13 +68,13 @@ func main() {
 	}
 
 	if len(Args) < 1 {
-		usage();
+		usage()
 		return
 	}
 
-	imports := Args[:len(Args)-1]		// All but last
+	imports := Args[:len(Args)-1] // All but last
 	//goon.Dump(imports)
-	cmd := Args[len(Args)-1]			// Last one
+	cmd := Args[len(Args)-1] // Last one
 	//goon.Dump(cmd)
 
 	src := "package main\n\nimport (\n"
@@ -86,7 +86,7 @@ func main() {
 	for _, importPath := range imports {
 		src += "\t. \"" + importPath + "\"\n"
 	}
-	if -1 == strings.Index(cmd, "(") {		// BUG: What if the bracket is a part of a comment or a string...
+	if -1 == strings.Index(cmd, "(") { // BUG: What if the bracket is a part of a comment or a string...
 		cmd += "(" + TrimLastNewline(ReadAllStdin()) + ")"
 	}
 	src += ")\n\nfunc main() {\n\t"
