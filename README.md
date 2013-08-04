@@ -1,7 +1,7 @@
 goe
 ===
 
-A tool to execute Go functions. The output is printed as comma separated goons to stdout.
+A command line tool to execute Go functions. The output is printed as comma separated goons to stdout.
 
 Installation
 ------------
@@ -13,12 +13,12 @@ Add `$GOPATH/bin` to your `$PATH` or use `$GOPATH/bin/goe`.
 
 Usage
 -----
-```
-goe [--quiet] [package ...] function(parameters)
+```bash
+$ goe [--quiet] [package ...] function(parameters)
 
-echo parameters | goe [--quiet] [package ...] function
+$ echo parameters | goe [--quiet] [package ...] function
 
-goe [package ...] function1 | goe [--quiet] [package ...] function2
+$ goe [package ...] function1 | goe [--quiet] [package ...] function2
 ```
 
 Examples
