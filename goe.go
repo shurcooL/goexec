@@ -100,12 +100,12 @@ func main() {
 
 	//print(src); return
 	//out, err := eval.Eval(src)
-	out, err := run(src)
+	output, errorString := run(src)
 
-	if err == "" {
-		fmt.Print(out)
+	if errorString == "" {
+		fmt.Print(output)
 	} else {
 		fmt.Println("===== Error =====")
-		fmt.Println(err)
+		fmt.Println(errorString)
 	}
 }
