@@ -18,6 +18,10 @@ var _ = goon.Dump
 func run(src string) (output string, error string) {
 	tempDir, err := ioutil.TempDir("", "goe_")
 	CheckError(err)
+	defer func() {
+		err := os.RemoveAll(tempDir)
+		CheckError(err)
+	}()
 
 	tempFile := path.Join(tempDir, "gen.go")
 	err = ioutil.WriteFile(tempFile, []byte(src), 0600)
@@ -26,9 +30,6 @@ func run(src string) (output string, error string) {
 	cmd := exec.Command("go", "run", tempFile)
 	cmd.Stdin = os.Stdin
 	out, err := cmd.CombinedOutput()
-
-	err = os.RemoveAll(tempDir)
-	CheckError(err)
 
 	if nil == err {
 		return string(out), ""
