@@ -3,17 +3,16 @@ package main
 import (
 	"fmt"
 	. "gist.github.com/5286084.git"
-	. "gist.github.com/5498057.git"
-	. "gist.github.com/5892738.git"
-	"github.com/shurcooL/go-goon"
+	"log"
+	//. "gist.github.com/5498057.git"
+	//. "gist.github.com/5892738.git"
+	_ "github.com/shurcooL/go-goon"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
 )
-
-var _ = goon.Dump
 
 func run(src string) (output string, error string) {
 	tempDir, err := ioutil.TempDir("", "goe_")
@@ -87,9 +86,9 @@ func main() {
 	for _, importPath := range imports {
 		src += "\t. \"" + importPath + "\"\n"
 	}
-	if -1 == strings.Index(cmd, "(") { // BUG: What if the bracket is a part of a comment or a string...
+	/*if -1 == strings.Index(cmd, "(") { // BUG: What if the bracket is a part of a comment or a string...
 		cmd += "(" + TrimLastNewline(ReadAllStdin()) + ")"
-	}
+	}*/
 	src += ")\n\nfunc main() {\n\t"
 	if Goon == Output {
 		src += "goon.Dump(" + cmd + ")" // TODO: DumpComma
@@ -98,7 +97,20 @@ func main() {
 	}
 	src += "\n}"
 
-	//print(src); return
+	//println(src); return
+	// goimports
+	{
+		cmd := exec.Command("goimports")
+		cmd.Stdin = strings.NewReader(src)
+		out, err := cmd.CombinedOutput()
+		if err == nil {
+			src = string(out)
+		} else {
+			log.Panicln("goimports", err)
+		}
+	}
+
+	//println(src); return
 	//out, err := eval.Eval(src)
 	output, errorString := run(src)
 
