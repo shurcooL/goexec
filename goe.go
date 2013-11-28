@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	. "gist.github.com/5286084.git"
-	"log"
 	//. "gist.github.com/5498057.git"
 	//. "gist.github.com/5892738.git"
 	_ "github.com/shurcooL/go-goon"
@@ -106,7 +105,7 @@ func main() {
 		if err == nil {
 			src = string(out)
 		} else {
-			log.Panicln("goimports", err)
+			panic(err)
 		}
 	}
 
