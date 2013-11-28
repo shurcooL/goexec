@@ -48,7 +48,7 @@ $ goe 'parser.ParseExpr("5 + 7")'
 		Kind:     (token.Token)(5),
 		Value:    (string)("7"),
 	}),
-}),
+})
 (interface{})(nil)
 
 $ goe --quiet 'fmt.Println("Use --quiet to disable output of goon; useful if you want to print to stdout.")'
