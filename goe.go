@@ -1,19 +1,23 @@
 package main
 
 import (
+	"errors"
+	"flag"
 	"fmt"
-	. "gist.github.com/5286084.git"
-	//. "gist.github.com/5498057.git"
-	//. "gist.github.com/5892738.git"
-	_ "github.com/shurcooL/go-goon"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
 	"strings"
+
+	. "gist.github.com/5286084.git"
+	. "gist.github.com/5498057.git"
+	. "gist.github.com/5892738.git"
+	_ "github.com/shurcooL/go-goon" // We need go-goon to be available; this ensures getting goe will get go-goon too
 )
 
-func run(src string) (output string, error string) {
+func run(src string) (output string, err error) {
+	// Create a temp folder
 	tempDir, err := ioutil.TempDir("", "goe_")
 	CheckError(err)
 	defer func() {
@@ -21,83 +25,61 @@ func run(src string) (output string, error string) {
 		CheckError(err)
 	}()
 
+	// Write the source code file
 	tempFile := path.Join(tempDir, "gen.go")
 	err = ioutil.WriteFile(tempFile, []byte(src), 0600)
 	CheckError(err)
 
+	// Compile and run the program
 	cmd := exec.Command("go", "run", tempFile)
 	cmd.Stdin = os.Stdin
 	out, err := cmd.CombinedOutput()
 
 	if nil == err {
-		return string(out), ""
+		return string(out), nil
 	} else {
-		return "", string(out)
+		return "", errors.New(string(out))
 	}
 }
 
 func usage() {
-	fmt.Println("Usage: ...")
+	fmt.Println("Usage: goe [--quiet] [package ...] [package.]function(parameters)")
+	fmt.Println("       echo parameters | goe --stdin [--quiet] [package ...] [package.]function)")
+	flag.PrintDefaults()
 }
 
+var quietFlag = flag.Bool("quiet", false, "Do not dump the return values as a goon.")
+var stdinFlag = flag.Bool("stdin", false, "Read func parameters from stdin instead.")
+
 func main() {
-	//os.Args = []string{`./goe`, `strings`, `Repeat("Go! ", 5)`}
-	//os.Args = []string{`./goe`, `strings`, `Replace("Calling Go functions from the terminal is hard.", "hard", "easy", -1)`}
-	//os.Args = []string{`./goe`, `strings`, `Repeat`}
-	//os.Args = []string{`./goe`, `gist.github.com/4727543.git`, `GetForcedUse`}
-	//os.Args = []string{`./goe`, `regexp`, `Compile`}
+	flag.Parse()
 
-	type OutputType int
-	const (
-		Quiet = iota
-		Goon
-	)
-	Output := Goon
-
-	Args := os.Args[1:]
-
-	if len(Args) < 1 {
-		usage()
-		return
-	}
-
-	if "--quiet" == Args[0] {
-		Output = Quiet
-		Args = Args[1:]
-	}
-
+	Args := flag.Args()
 	if len(Args) < 1 {
 		usage()
 		return
 	}
 
 	imports := Args[:len(Args)-1] // All but last
-	//goon.Dump(imports)
-	cmd := Args[len(Args)-1] // Last one
-	//goon.Dump(cmd)
+	cmd := Args[len(Args)-1]      // Last one
+	if *stdinFlag {
+		cmd += "(" + TrimLastNewline(ReadAllStdin()) + ")"
+	}
+	if false == *quietFlag {
+		cmd = "goon.Dump(" + cmd + ")"
+	}
 
+	// Generate source code
 	src := "package main\n\nimport (\n"
-	if Goon == Output {
-		// TODO: Check that it hasn't already been imported
+	if *quietFlag == false {
 		src += "\t\"github.com/shurcooL/go-goon\"\n"
-	} else if Quiet == Output {
 	}
 	for _, importPath := range imports {
 		src += "\t. \"" + importPath + "\"\n"
 	}
-	/*if -1 == strings.Index(cmd, "(") { // BUG: What if the bracket is a part of a comment or a string...
-		cmd += "(" + TrimLastNewline(ReadAllStdin()) + ")"
-	}*/
-	src += ")\n\nfunc main() {\n\t"
-	if Goon == Output {
-		src += "goon.Dump(" + cmd + ")" // TODO: DumpComma
-	} else if Quiet == Output {
-		src += cmd
-	}
-	src += "\n}"
+	src += ")\n\nfunc main() {\n\t" + cmd + "\n}"
 
-	//println(src); return
-	// goimports
+	// Run `goimports` on the source code
 	{
 		cmd := exec.Command("goimports")
 		cmd.Stdin = strings.NewReader(src)
@@ -109,14 +91,13 @@ func main() {
 		}
 	}
 
-	//println(src); return
-	//out, err := eval.Eval(src)
-	output, errorString := run(src)
+	// Run the program and get its output
+	output, err := run(src)
 
-	if errorString == "" {
+	if err == nil {
 		fmt.Print(output)
 	} else {
 		fmt.Println("===== Error =====")
-		fmt.Println(errorString)
+		fmt.Println(err.Error())
 	}
 }
