@@ -13,7 +13,9 @@ import (
 	. "gist.github.com/5286084.git"
 	. "gist.github.com/5498057.git"
 	. "gist.github.com/5892738.git"
-	_ "github.com/shurcooL/go-goon" // We need go-goon to be available; this ensures getting goe will get go-goon too
+
+	// We need go-goon to be available; this ensures getting goe will get go-goon too
+	_ "github.com/shurcooL/go-goon"
 )
 
 func run(src string) (output string, err error) {
