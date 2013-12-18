@@ -8,8 +8,8 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"strings"
 
+	goimports "code.google.com/p/go.tools/imports"
 	. "gist.github.com/5286084.git"
 	. "gist.github.com/5498057.git"
 	. "gist.github.com/5892738.git"
@@ -83,9 +83,7 @@ func main() {
 
 	// Run `goimports` on the source code
 	{
-		cmd := exec.Command("goimports")
-		cmd.Stdin = strings.NewReader(src)
-		out, err := cmd.CombinedOutput()
+		out, err := goimports.Process("", []byte(src), nil)
 		if err == nil {
 			src = string(out)
 		} else {
