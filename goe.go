@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"path"
+	"path/filepath"
 
 	goimports "code.google.com/p/go.tools/imports"
 	. "gist.github.com/5286084.git"
@@ -28,7 +28,7 @@ func run(src string) (output string, err error) {
 	}()
 
 	// Write the source code file
-	tempFile := path.Join(tempDir, "gen.go")
+	tempFile := filepath.Join(tempDir, "gen.go")
 	err = ioutil.WriteFile(tempFile, []byte(src), 0600)
 	CheckError(err)
 
