@@ -45,23 +45,25 @@ func run(src string) (output string, err error) {
 }
 
 func usage() {
-	fmt.Println("Usage: goe [--quiet] [package ...] [package.]function(parameters)")
-	fmt.Println("       echo parameters | goe --stdin [--quiet] [package ...] [package.]function)")
+	fmt.Fprint(os.Stderr, "Usage: goe [--quiet] [package ...] [package.]function(parameters)\n")
+	fmt.Fprint(os.Stderr, "       echo parameters | goe --stdin [--quiet] [package ...] [package.]function\n")
 	flag.PrintDefaults()
+	os.Exit(2)
 }
 
 var quietFlag = flag.Bool("quiet", false, "Do not dump the return values as a goon.")
 var stdinFlag = flag.Bool("stdin", false, "Read func parameters from stdin instead.")
 
 func main() {
+	flag.Usage = usage
 	flag.Parse()
 
-	Args := flag.Args()
-	if len(Args) < 1 {
+	if flag.NArg() < 1 {
 		usage()
 		return
 	}
 
+	Args := flag.Args()
 	imports := Args[:len(Args)-1] // All but last
 	cmd := Args[len(Args)-1]      // Last one
 	if *stdinFlag {
