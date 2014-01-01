@@ -1,3 +1,4 @@
+// A command line tool to execute Go functions. The output is printed as goons to stdout.
 package main
 
 import (
