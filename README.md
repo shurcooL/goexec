@@ -5,6 +5,7 @@ A command line tool to execute Go functions. The output is printed as goons to s
 
 Installation
 ------------
+
 ```bash
 $ go get -u github.com/shurcooL/goe
 ```
@@ -13,6 +14,7 @@ Add `$GOPATH/bin` to your `$PATH` or copy `$GOPATH/bin/goe` to your `$PATH`.
 
 Usage
 -----
+
 ```
 Usage: goe [--quiet] [package ...] [package.]function(parameters)
        echo parameters | goe --stdin [--quiet] [package ...] [package.]function
@@ -22,6 +24,7 @@ Usage: goe [--quiet] [package ...] [package.]function(parameters)
 
 Examples
 --------
+
 ```bash
 $ goe 'strings.Repeat("Go! ", 5)'
 (string)("Go! Go! Go! Go! Go! ")
