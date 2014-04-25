@@ -34,7 +34,7 @@ func run(src string) (output string, err error) {
 	CheckError(err)
 
 	// Compile and run the program
-	cmd := exec.Command("go", "run", tempFile)
+	cmd := exec.Command("go", "run", "-a", tempFile)
 	cmd.Stdin = os.Stdin
 	out, err := cmd.CombinedOutput()
 
