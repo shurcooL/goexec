@@ -46,14 +46,15 @@ func run(src string) (output string, err error) {
 }
 
 func usage() {
-	fmt.Fprint(os.Stderr, "Usage: goe [--quiet] [package ...] [package.]function(parameters)\n")
-	fmt.Fprint(os.Stderr, "       echo parameters | goe --stdin [--quiet] [package ...] [package.]function\n")
+	fmt.Fprintln(os.Stderr, `Usage: goe [flags] [packages] [package.]function(parameters)
+       echo parameters | goe --stdin [flags] [packages] [package.]function`)
 	flag.PrintDefaults()
 	os.Exit(2)
 }
 
 var quietFlag = flag.Bool("quiet", false, "Do not dump the return values as a goon.")
 var stdinFlag = flag.Bool("stdin", false, "Read func parameters from stdin instead.")
+var nFlag = flag.Bool("n", false, "Print the generated source but do not run it.")
 
 func main() {
 	flag.Usage = usage
@@ -92,6 +93,11 @@ func main() {
 		} else {
 			panic(err)
 		}
+	}
+
+	if *nFlag == true {
+		fmt.Print(src)
+		return
 	}
 
 	// Run the program and get its output

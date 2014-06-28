@@ -16,8 +16,9 @@ Usage
 -----
 
 ```
-Usage: goe [--quiet] [package ...] [package.]function(parameters)
-       echo parameters | goe --stdin [--quiet] [package ...] [package.]function
+Usage: goe [flags] [packages] [package.]function(parameters)
+       echo parameters | goe --stdin [flags] [packages] [package.]function
+  -n=false: Print the generated source but do not run it.
   -quiet=false: Do not dump the return values as a goon.
   -stdin=false: Read func parameters from stdin instead.
 ```
