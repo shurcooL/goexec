@@ -25,7 +25,9 @@ func run(src string) (output string, err error) {
 	CheckError(err)
 	defer func() {
 		err := os.RemoveAll(tempDir)
-		CheckError(err)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "warning: error removing temp dir:", err)
+		}
 	}()
 
 	// Write the source code file
