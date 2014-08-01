@@ -11,9 +11,9 @@ import (
 	"path/filepath"
 
 	goimports "code.google.com/p/go.tools/imports"
-	. "gist.github.com/5286084.git"
-	. "gist.github.com/5498057.git"
-	. "gist.github.com/5892738.git"
+	. "github.com/shurcooL/go/gists/gist5286084"
+	. "github.com/shurcooL/go/gists/gist5498057"
+	. "github.com/shurcooL/go/gists/gist5892738"
 
 	// We need go-goon to be available; this ensures getting goe will get go-goon too
 	_ "github.com/shurcooL/go-goon"
