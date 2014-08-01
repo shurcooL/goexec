@@ -7,10 +7,8 @@ Installation
 ------------
 
 ```bash
-$ go get -u github.com/shurcooL/goe
+go get -u github.com/shurcooL/goe
 ```
-
-Add `$GOPATH/bin` to your `$PATH` or copy `$GOPATH/bin/goe` to your `$PATH`.
 
 Usage
 -----
