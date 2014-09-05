@@ -11,18 +11,19 @@ import (
 	"path/filepath"
 
 	goimports "code.google.com/p/go.tools/imports"
-	. "github.com/shurcooL/go/gists/gist5286084"
-	. "github.com/shurcooL/go/gists/gist5498057"
-	. "github.com/shurcooL/go/gists/gist5892738"
+	"github.com/shurcooL/go/gists/gist5498057"
+	"github.com/shurcooL/go/gists/gist5892738"
 
-	// We need go-goon to be available; this ensures getting goe will get go-goon too
+	// We need go-goon to be available; this ensures getting goe will get go-goon too.
 	_ "github.com/shurcooL/go-goon"
 )
 
 func run(src string) (output string, err error) {
-	// Create a temp folder
+	// Create a temp folder.
 	tempDir, err := ioutil.TempDir("", "goe_")
-	CheckError(err)
+	if err != nil {
+		panic(err)
+	}
 	defer func() {
 		err := os.RemoveAll(tempDir)
 		if err != nil {
@@ -30,12 +31,14 @@ func run(src string) (output string, err error) {
 		}
 	}()
 
-	// Write the source code file
+	// Write the source code file.
 	tempFile := filepath.Join(tempDir, "gen.go")
 	err = ioutil.WriteFile(tempFile, []byte(src), 0600)
-	CheckError(err)
+	if err != nil {
+		panic(err)
+	}
 
-	// Compile and run the program
+	// Compile and run the program.
 	cmd := exec.Command("go", "run", "-a", tempFile)
 	cmd.Stdin = os.Stdin
 	out, err := cmd.CombinedOutput()
@@ -67,17 +70,17 @@ func main() {
 		return
 	}
 
-	Args := flag.Args()
-	imports := Args[:len(Args)-1] // All but last
-	cmd := Args[len(Args)-1]      // Last one
+	args := flag.Args()
+	imports := args[:len(args)-1] // All but last.
+	cmd := args[len(args)-1]      // Last one.
 	if *stdinFlag {
-		cmd += "(" + TrimLastNewline(ReadAllStdin()) + ")"
+		cmd += "(" + gist5892738.TrimLastNewline(gist5498057.ReadAllStdin()) + ")"
 	}
 	if false == *quietFlag {
 		cmd = "goon.Dump(" + cmd + ")"
 	}
 
-	// Generate source code
+	// Generate source code.
 	src := "package main\n\nimport (\n"
 	if *quietFlag == false {
 		src += "\t\"github.com/shurcooL/go-goon\"\n"
@@ -87,7 +90,7 @@ func main() {
 	}
 	src += ")\n\nfunc main() {\n\t" + cmd + "\n}"
 
-	// Run `goimports` on the source code
+	// Run `goimports` on the source code.
 	{
 		out, err := goimports.Process("", []byte(src), nil)
 		if err == nil {
@@ -102,7 +105,7 @@ func main() {
 		return
 	}
 
-	// Run the program and get its output
+	// Run the program and get its output.
 	output, err := run(src)
 
 	if err == nil {
