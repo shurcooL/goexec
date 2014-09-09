@@ -93,11 +93,11 @@ func main() {
 	// Run `goimports` on the source code.
 	{
 		out, err := goimports.Process("", []byte(src), nil)
-		if err == nil {
-			src = string(out)
-		} else {
-			panic(err)
+		if err != nil {
+			fmt.Print("gen.go:", err, "\n")
+			os.Exit(1)
 		}
+		src = string(out)
 	}
 
 	if *nFlag == true {
