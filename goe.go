@@ -2,7 +2,6 @@
 package main
 
 import (
-	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -18,11 +17,11 @@ import (
 	_ "github.com/shurcooL/go-goon"
 )
 
-func run(src string) (output string, err error) {
+func run(src string) error {
 	// Create a temp folder.
 	tempDir, err := ioutil.TempDir("", "goe_")
 	if err != nil {
-		panic(err)
+		return err
 	}
 	defer func() {
 		err := os.RemoveAll(tempDir)
@@ -35,19 +34,15 @@ func run(src string) (output string, err error) {
 	tempFile := filepath.Join(tempDir, "gen.go")
 	err = ioutil.WriteFile(tempFile, []byte(src), 0600)
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	// Compile and run the program.
 	cmd := exec.Command("go", "run", "-a", tempFile)
 	cmd.Stdin = os.Stdin
-	out, err := cmd.CombinedOutput()
-
-	if nil == err {
-		return string(out), nil
-	} else {
-		return "", errors.New(string(out))
-	}
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	return cmd.Run()
 }
 
 func usage() {
@@ -105,13 +100,10 @@ func main() {
 		return
 	}
 
-	// Run the program and get its output.
-	output, err := run(src)
-
-	if err == nil {
-		fmt.Print(output)
-	} else {
-		fmt.Println("===== Error =====")
-		fmt.Println(err.Error())
+	// Run the program.
+	err := run(src)
+	if err != nil {
+		fmt.Println("### Error ###")
+		fmt.Println(err)
 	}
 }
