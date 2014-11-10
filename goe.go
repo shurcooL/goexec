@@ -9,9 +9,9 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	goimports "code.google.com/p/go.tools/imports"
 	"github.com/shurcooL/go/gists/gist5498057"
 	"github.com/shurcooL/go/gists/gist5892738"
+	goimports "golang.org/x/tools/imports"
 
 	// We need go-goon to be available; this ensures getting goe will get go-goon too.
 	_ "github.com/shurcooL/go-goon"
