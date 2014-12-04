@@ -9,7 +9,6 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/shurcooL/go/gists/gist5498057"
 	"github.com/shurcooL/go/gists/gist5892738"
 	goimports "golang.org/x/tools/imports"
 
@@ -69,7 +68,12 @@ func main() {
 	imports := args[:len(args)-1] // All but last.
 	cmd := args[len(args)-1]      // Last one.
 	if *stdinFlag {
-		cmd += "(" + gist5892738.TrimLastNewline(gist5498057.ReadAllStdin()) + ")"
+		stdin, err := ioutil.ReadAll(os.Stdin)
+		if err != nil {
+			panic(err)
+		}
+
+		cmd += "(" + gist5892738.TrimLastNewline(string(stdin)) + ")"
 	}
 	if false == *quietFlag {
 		cmd = "goon.Dump(" + cmd + ")"
@@ -89,7 +93,7 @@ func main() {
 	{
 		out, err := goimports.Process("", []byte(src), nil)
 		if err != nil {
-			fmt.Print("gen.go:", err, "\n")
+			fmt.Print("gen.go:", err, "\n") // No space after colon so the ouput is like "gen.go:8:18: expected ...".
 			os.Exit(1)
 		}
 		src = string(out)
