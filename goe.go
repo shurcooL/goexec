@@ -9,7 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/shurcooL/go/gists/gist5892738"
+	"github.com/shurcooL/go/trim"
 	goimports "golang.org/x/tools/imports"
 
 	// We need go-goon to be available; this ensures getting goe will get go-goon too.
@@ -73,7 +73,7 @@ func main() {
 			panic(err)
 		}
 
-		cmd += "(" + gist5892738.TrimLastNewline(string(stdin)) + ")"
+		cmd += "(" + trim.LastNewline(string(stdin)) + ")"
 	}
 	if false == *quietFlag {
 		cmd = "goon.Dump(" + cmd + ")"
