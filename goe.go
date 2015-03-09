@@ -48,7 +48,6 @@ func usage() {
 	fmt.Fprintln(os.Stderr, `Usage: goe [flags] [packages] [package.]function(parameters)
        echo parameters | goe --stdin [flags] [packages] [package.]function`)
 	flag.PrintDefaults()
-	os.Exit(2)
 }
 
 var quietFlag = flag.Bool("quiet", false, "Do not dump the return values as a goon.")
@@ -60,7 +59,8 @@ func main() {
 	flag.Parse()
 
 	if flag.NArg() < 1 {
-		usage()
+		flag.Usage()
+		os.Exit(2)
 		return
 	}
 
