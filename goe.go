@@ -37,7 +37,13 @@ func run(src string) error {
 	}
 
 	// Compile and run the program.
-	cmd := exec.Command("go", "run", tempFile)
+	var cmd *exec.Cmd
+	switch *compilerFlag {
+	case "gc":
+		cmd = exec.Command("go", "run", tempFile)
+	case "gopherjs":
+		cmd = exec.Command("gopherjs", "run", tempFile)
+	}
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -53,12 +59,21 @@ func usage() {
 var quietFlag = flag.Bool("quiet", false, "Do not dump the return values as a goon.")
 var stdinFlag = flag.Bool("stdin", false, "Read func parameters from stdin instead.")
 var nFlag = flag.Bool("n", false, "Print the generated source but do not run it.")
+var compilerFlag = flag.String("compiler", "gc", `Compiler to use, one of: "gc", "gopherjs".`)
 
 func main() {
 	flag.Usage = usage
 	flag.Parse()
 
 	if flag.NArg() < 1 {
+		flag.Usage()
+		os.Exit(2)
+		return
+	}
+
+	switch *compilerFlag {
+	case "gc", "gopherjs":
+	default:
 		flag.Usage()
 		os.Exit(2)
 		return
