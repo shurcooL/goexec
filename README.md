@@ -1,5 +1,4 @@
-goe
-===
+# goe [![Build Status](https://travis-ci.org/shurcooL/goe.svg?branch=master)](https://travis-ci.org/shurcooL/goe) [![GoDoc](https://godoc.org/github.com/shurcooL/goe?status.svg)](https://godoc.org/github.com/shurcooL/goe)
 
 A command line tool to execute Go functions. The output is printed as goons to stdout.
 
@@ -59,3 +58,8 @@ $ goe 'parser.ParseExpr("5 + 7")'
 $ goe --quiet 'fmt.Println("Use --quiet to disable output of goon; useful if you want to print to stdout.")'
 Use --quiet to disable output of goon; useful if you want to print to stdout.
 ```
+
+License
+-------
+
+-	[MIT License](http://opensource.org/licenses/mit-license.php)
