@@ -16,6 +16,19 @@ import (
 	_ "github.com/shurcooL/go-goon"
 )
 
+var (
+	quietFlag    = flag.Bool("quiet", false, "Do not dump the return values as a goon.")
+	stdinFlag    = flag.Bool("stdin", false, "Read func parameters from stdin instead.")
+	nFlag        = flag.Bool("n", false, "Print the generated source but do not run it.")
+	compilerFlag = flag.String("compiler", "gc", `Compiler to use, one of: "gc", "gopherjs".`)
+)
+
+func usage() {
+	fmt.Fprintln(os.Stderr, `Usage: goe [flags] [packages] [package.]function(parameters)
+       echo parameters | goe --stdin [flags] [packages] [package.]function`)
+	flag.PrintDefaults()
+}
+
 func run(src string) error {
 	// Create a temp folder.
 	tempDir, err := ioutil.TempDir("", "goe_")
@@ -49,17 +62,6 @@ func run(src string) error {
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
 }
-
-func usage() {
-	fmt.Fprintln(os.Stderr, `Usage: goe [flags] [packages] [package.]function(parameters)
-       echo parameters | goe --stdin [flags] [packages] [package.]function`)
-	flag.PrintDefaults()
-}
-
-var quietFlag = flag.Bool("quiet", false, "Do not dump the return values as a goon.")
-var stdinFlag = flag.Bool("stdin", false, "Read func parameters from stdin instead.")
-var nFlag = flag.Bool("n", false, "Print the generated source but do not run it.")
-var compilerFlag = flag.String("compiler", "gc", `Compiler to use, one of: "gc", "gopherjs".`)
 
 func main() {
 	flag.Usage = usage
