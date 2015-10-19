@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 
 	"github.com/shurcooL/go/trim"
-	goimports "golang.org/x/tools/imports"
+	"golang.org/x/tools/imports"
 
 	// We need go-goon to be available; this ensures getting goe will get go-goon too.
 	_ "github.com/shurcooL/go-goon"
@@ -80,8 +80,8 @@ func main() {
 	}
 
 	args := flag.Args()
-	imports := args[:len(args)-1] // All but last.
-	cmd := args[len(args)-1]      // Last one.
+	importPaths := args[:len(args)-1] // All but last.
+	cmd := args[len(args)-1]          // Last one.
 	if *stdinFlag {
 		stdin, err := ioutil.ReadAll(os.Stdin)
 		if err != nil {
@@ -99,14 +99,14 @@ func main() {
 	if *quietFlag == false {
 		src += "\t\"github.com/shurcooL/go-goon\"\n"
 	}
-	for _, importPath := range imports {
+	for _, importPath := range importPaths {
 		src += "\t. \"" + importPath + "\"\n"
 	}
 	src += ")\n\nfunc main() {\n\t" + cmd + "\n}"
 
 	// Run `goimports` on the source code.
 	{
-		out, err := goimports.Process("", []byte(src), nil)
+		out, err := imports.Process("", []byte(src), nil)
 		if err != nil {
 			fmt.Print("gen.go:", err, "\n") // No space after colon so the ouput is like "gen.go:8:18: expected ...".
 			os.Exit(1)
