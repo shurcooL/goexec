@@ -1,4 +1,4 @@
-// A command line tool to execute Go functions. The output is printed as goons to stdout.
+// goexec is a command line tool to execute Go code. Output is printed as goons to stdout.
 package main
 
 import (
@@ -12,7 +12,7 @@ import (
 	"github.com/shurcooL/go/trim"
 	"golang.org/x/tools/imports"
 
-	// We need go-goon to be available; this ensures getting goe will get go-goon too.
+	// We need go-goon to be available; this ensures getting goexec will get go-goon too.
 	_ "github.com/shurcooL/go-goon"
 )
 
@@ -24,14 +24,14 @@ var (
 )
 
 func usage() {
-	fmt.Fprintln(os.Stderr, `Usage: goe [flags] [packages] [package.]function(parameters)
-       echo parameters | goe --stdin [flags] [packages] [package.]function`)
+	fmt.Fprintln(os.Stderr, `Usage: goexec [flags] [packages] [package.]function(parameters)
+       echo parameters | goexec --stdin [flags] [packages] [package.]function`)
 	flag.PrintDefaults()
 }
 
 func run(src string) error {
 	// Create a temp folder.
-	tempDir, err := ioutil.TempDir("", "goe_")
+	tempDir, err := ioutil.TempDir("", "goexec_")
 	if err != nil {
 		return err
 	}

@@ -1,44 +1,48 @@
-# goe [![Build Status](https://travis-ci.org/shurcooL/goe.svg?branch=master)](https://travis-ci.org/shurcooL/goe) [![GoDoc](https://godoc.org/github.com/shurcooL/goe?status.svg)](https://godoc.org/github.com/shurcooL/goe)
+# goexec [![Build Status](https://travis-ci.org/shurcooL/goexec.svg?branch=master)](https://travis-ci.org/shurcooL/goexec) [![GoDoc](https://godoc.org/github.com/shurcooL/goexec?status.svg)](https://godoc.org/github.com/shurcooL/goexec)
 
-A command line tool to execute Go functions. The output is printed as goons to stdout.
+goexec is a command line tool to execute Go code. Output is printed as goons to stdout.
 
 Installation
 ------------
 
 ```bash
-go get -u github.com/shurcooL/goe
+go get -u github.com/shurcooL/goexec
 ```
 
 Usage
 -----
 
 ```
-Usage: goe [flags] [packages] [package.]function(parameters)
-       echo parameters | goe --stdin [flags] [packages] [package.]function
-  -n=false: Print the generated source but do not run it.
-  -quiet=false: Do not dump the return values as a goon.
-  -stdin=false: Read func parameters from stdin instead.
+Usage: goexec [flags] [packages] [package.]function(parameters)
+       echo parameters | goexec --stdin [flags] [packages] [package.]function
+  -compiler string
+    	Compiler to use, one of: "gc", "gopherjs". (default "gc")
+  -n	Print the generated source but do not run it.
+  -quiet
+    	Do not dump the return values as a goon.
+  -stdin
+    	Read func parameters from stdin instead.
 ```
 
 Examples
 --------
 
 ```bash
-$ goe 'strings.Repeat("Go! ", 5)'
+$ goexec 'strings.Repeat("Go! ", 5)'
 (string)("Go! Go! Go! Go! Go! ")
 
-$ goe strings 'Replace("Calling Go functions from the terminal is hard.", "hard", "easy", -1)'
+$ goexec strings 'Replace("Calling Go functions from the terminal is hard.", "hard", "easy", -1)'
 (string)("Calling Go functions from the terminal is easy.")
 
-# Dumps the doc.Package struct for "fmt"
-$ goe gist.github.com/5504644.git 'GetDocPackage(BuildPackageFromImportPath("fmt"))'
+# Dumps the doc.Package struct for "fmt".
+$ goexec gist.github.com/5504644.git 'GetDocPackage(BuildPackageFromImportPath("fmt"))'
 (*doc.Package)(...)
 
-$ echo '"fmt"' | goe --stdin 'gist4727543.GetForcedUse'
+$ echo '"fmt"' | goexec --stdin 'gist4727543.GetForcedUse'
 (string)("var _ = fmt.Errorf")
 
-# Note that parser.ParseExpr returns 2 values (ast.Expr, error)
-$ goe 'parser.ParseExpr("5 + 7")'
+# Note that parser.ParseExpr returns 2 values (ast.Expr, error).
+$ goexec 'parser.ParseExpr("5 + 7")'
 (*ast.BinaryExpr)(&ast.BinaryExpr{
 	X: (*ast.BasicLit)(&ast.BasicLit{
 		ValuePos: (token.Pos)(1),
@@ -55,7 +59,7 @@ $ goe 'parser.ParseExpr("5 + 7")'
 })
 (interface{})(nil)
 
-$ goe --quiet 'fmt.Println("Use --quiet to disable output of goon; useful if you want to print to stdout.")'
+$ goexec --quiet 'fmt.Println("Use --quiet to disable output of goon; useful if you want to print to stdout.")'
 Use --quiet to disable output of goon; useful if you want to print to stdout.
 ```
 
