@@ -1,6 +1,6 @@
 package main
 
-func ExampleRun() {
+func Example_run() {
 	const src = `package main
 
 import "github.com/shurcooL/go-goon"
