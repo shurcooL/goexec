@@ -92,19 +92,28 @@ func main() {
 
 		cmd += "(" + trim.LastNewline(string(stdin)) + ")"
 	}
-	if false == *quietFlag {
+	if !*quietFlag {
 		cmd = "goon.Dump(" + cmd + ")"
 	}
 
 	// Generate source code.
-	src := "package main\n\nimport (\n"
-	if *quietFlag == false {
-		src += "\t\"github.com/shurcooL/go-goon\"\n"
+	src := `package main
+
+import (
+`
+	if !*quietFlag {
+		src += `	"github.com/shurcooL/go-goon"
+`
 	}
 	for _, importPath := range importPaths {
-		src += "\t. \"" + importPath + "\"\n"
+		src += `	. "` + importPath + `"
+`
 	}
-	src += ")\n\nfunc main() {\n\t" + cmd + "\n}"
+	src += `)
+
+func main() {
+	` + cmd + `
+}`
 
 	// Run `goimports` on the source code.
 	{
@@ -116,7 +125,7 @@ func main() {
 		src = string(out)
 	}
 
-	if *nFlag == true {
+	if *nFlag {
 		fmt.Print(src)
 		return
 	}
