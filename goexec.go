@@ -113,13 +113,15 @@ import (
 
 func main() {
 	` + cmd + `
-}`
+}
+`
 
 	// Run `goimports` on the source code.
 	{
 		out, err := imports.Process("", []byte(src), nil)
 		if err != nil {
-			fmt.Print("gen.go:", err, "\n") // No space after colon so the ouput is like "gen.go:8:18: expected ...".
+			fmt.Print(src)
+			fmt.Print("imports.Process: gen.go:", err, "\n") // No space after colon so the ouput is like "gen.go:8:18: expected ...".
 			os.Exit(1)
 		}
 		src = string(out)
