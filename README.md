@@ -63,6 +63,11 @@ $ goexec --quiet 'fmt.Println("Use --quiet to disable output of goon; useful if 
 Use --quiet to disable output of goon; useful if you want to print to stdout.
 ```
 
+Alternatives
+------------
+
+-	[gommand](https://github.com/sno6/gommand) - Go one liner program, similar to python -c.
+
 License
 -------
 
