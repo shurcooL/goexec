@@ -1,4 +1,7 @@
-# goexec [![Build Status](https://travis-ci.org/shurcooL/goexec.svg?branch=master)](https://travis-ci.org/shurcooL/goexec) [![GoDoc](https://godoc.org/github.com/shurcooL/goexec?status.svg)](https://godoc.org/github.com/shurcooL/goexec)
+goexec
+======
+
+[![Build Status](https://travis-ci.org/shurcooL/goexec.svg?branch=master)](https://travis-ci.org/shurcooL/goexec) [![GoDoc](https://godoc.org/github.com/shurcooL/goexec?status.svg)](https://godoc.org/github.com/shurcooL/goexec)
 
 goexec is a command line tool to execute Go code. Output is printed as goons to stdout.
 
@@ -71,4 +74,4 @@ Alternatives
 License
 -------
 
--	[MIT License](http://opensource.org/licenses/mit-license.php)
+-	[MIT License](https://opensource.org/licenses/mit-license.php)
