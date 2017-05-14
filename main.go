@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -27,6 +28,80 @@ func usage() {
 	fmt.Fprintln(os.Stderr, `Usage: goexec [flags] [packages] [package.]function(parameters)
        echo parameters | goexec --stdin [flags] [packages] [package.]function`)
 	flag.PrintDefaults()
+}
+
+func main() {
+	flag.Usage = usage
+	flag.Parse()
+	if flag.NArg() < 1 {
+		flag.Usage()
+		os.Exit(2)
+	}
+	switch *compilerFlag {
+	case "gc", "gopherjs":
+	default:
+		flag.Usage()
+		os.Exit(2)
+	}
+
+	args := flag.Args()
+	importPaths := args[:len(args)-1] // All but last.
+	cmd := args[len(args)-1]          // Last one.
+	if *stdinFlag {
+		stdin, err := ioutil.ReadAll(os.Stdin)
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		cmd += "(" + trim.LastNewline(string(stdin)) + ")"
+	}
+	if !*quietFlag {
+		cmd = "goon.Dump(" + cmd + ")"
+	}
+
+	// Generate source code.
+	src := `package main
+
+import (
+`
+	if !*quietFlag {
+		src += `	"github.com/shurcooL/go-goon"
+`
+	}
+	for _, importPath := range importPaths {
+		src += `	. "` + importPath + `"
+`
+	}
+	src += `)
+
+func main() {
+	` + cmd + `
+}
+`
+
+	// Run `goimports` on the source code.
+	{
+		out, err := imports.Process("", []byte(src), nil)
+		if err != nil {
+			fmt.Fprint(os.Stderr, src)
+			fmt.Fprint(os.Stderr, "imports.Process: gen.go:", err, "\n") // No space after colon so the ouput is like "gen.go:8:18: expected ...".
+			os.Exit(1)
+		}
+		src = string(out)
+	}
+
+	if *nFlag {
+		fmt.Print(src)
+		return
+	}
+
+	// Run the program.
+	err := run(src)
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "### Error ###")
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 }
 
 func run(src string) error {
@@ -61,81 +136,4 @@ func run(src string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()
-}
-
-func main() {
-	flag.Usage = usage
-	flag.Parse()
-
-	if flag.NArg() < 1 {
-		flag.Usage()
-		os.Exit(2)
-		return
-	}
-
-	switch *compilerFlag {
-	case "gc", "gopherjs":
-	default:
-		flag.Usage()
-		os.Exit(2)
-		return
-	}
-
-	args := flag.Args()
-	importPaths := args[:len(args)-1] // All but last.
-	cmd := args[len(args)-1]          // Last one.
-	if *stdinFlag {
-		stdin, err := ioutil.ReadAll(os.Stdin)
-		if err != nil {
-			panic(err)
-		}
-
-		cmd += "(" + trim.LastNewline(string(stdin)) + ")"
-	}
-	if !*quietFlag {
-		cmd = "goon.Dump(" + cmd + ")"
-	}
-
-	// Generate source code.
-	src := `package main
-
-import (
-`
-	if !*quietFlag {
-		src += `	"github.com/shurcooL/go-goon"
-`
-	}
-	for _, importPath := range importPaths {
-		src += `	. "` + importPath + `"
-`
-	}
-	src += `)
-
-func main() {
-	` + cmd + `
-}
-`
-
-	// Run `goimports` on the source code.
-	{
-		out, err := imports.Process("", []byte(src), nil)
-		if err != nil {
-			fmt.Print(src)
-			fmt.Print("imports.Process: gen.go:", err, "\n") // No space after colon so the ouput is like "gen.go:8:18: expected ...".
-			os.Exit(1)
-		}
-		src = string(out)
-	}
-
-	if *nFlag {
-		fmt.Print(src)
-		return
-	}
-
-	// Run the program.
-	err := run(src)
-	if err != nil {
-		fmt.Println("### Error ###")
-		fmt.Println(err)
-	}
 }
