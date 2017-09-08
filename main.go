@@ -4,11 +4,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"go/build"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 
 	"github.com/shurcooL/go/trim"
 	"golang.org/x/tools/imports"
@@ -44,6 +46,11 @@ func main() {
 		os.Exit(2)
 	}
 
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	args := flag.Args()
 	importPaths := args[:len(args)-1] // All but last.
 	cmd := args[len(args)-1]          // Last one.
@@ -69,7 +76,14 @@ import (
 `
 	}
 	for _, importPath := range importPaths {
-		src += `	. "` + importPath + `"
+		bpkg, err := build.Import(importPath, cwd, build.FindOnly)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		if build.IsLocalImport(bpkg.ImportPath) {
+			log.Fatalf("local import path %q not supported", bpkg.ImportPath) // TODO: Add support for this when it's a priority.
+		}
+		src += `	. ` + strconv.Quote(bpkg.ImportPath) + `
 `
 	}
 	src += `)
@@ -96,7 +110,7 @@ func main() {
 	}
 
 	// Run the program.
-	err := run(src)
+	err = run(src)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "### Error ###")
 		fmt.Fprintln(os.Stderr, err)
