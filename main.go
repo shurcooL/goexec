@@ -28,7 +28,7 @@ var (
 
 func usage() {
 	fmt.Fprintln(os.Stderr, `Usage: goexec [flags] [packages] [package.]function(parameters)
-       echo parameters | goexec --stdin [flags] [packages] [package.]function`)
+       echo parameters | goexec -stdin [flags] [packages] [package.]function`)
 	flag.PrintDefaults()
 }
 

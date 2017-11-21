@@ -17,7 +17,7 @@ Usage
 
 ```
 Usage: goexec [flags] [packages] [package.]function(parameters)
-       echo parameters | goexec --stdin [flags] [packages] [package.]function
+       echo parameters | goexec -stdin [flags] [packages] [package.]function
   -compiler string
     	Compiler to use, one of: "gc", "gopherjs". (default "gc")
   -n	Print the generated source but do not run it.
@@ -37,13 +37,6 @@ $ goexec 'strings.Repeat("Go! ", 5)'
 $ goexec strings 'Replace("Calling Go functions from the terminal is hard.", "hard", "easy", -1)'
 (string)("Calling Go functions from the terminal is easy.")
 
-# Dumps the doc.Package struct for "fmt".
-$ goexec gist.github.com/5504644.git 'GetDocPackage(BuildPackageFromImportPath("fmt"))'
-(*doc.Package)(...)
-
-$ echo '"fmt"' | goexec --stdin 'gist4727543.GetForcedUse'
-(string)("var _ = fmt.Errorf")
-
 # Note that parser.ParseExpr returns 2 values (ast.Expr, error).
 $ goexec 'parser.ParseExpr("5 + 7")'
 (*ast.BinaryExpr)(&ast.BinaryExpr{
@@ -62,15 +55,23 @@ $ goexec 'parser.ParseExpr("5 + 7")'
 })
 (interface{})(nil)
 
-$ goexec --quiet 'fmt.Println("Use --quiet to disable output of goon; useful if you want to print to stdout.")'
-Use --quiet to disable output of goon; useful if you want to print to stdout.
+# Run function RepoRootForImportPath from package "golang.org/x/tools/go/vcs".
+$ goexec 'vcs.RepoRootForImportPath("rsc.io/pdf", false)'
+(*vcs.RepoRoot)(...)
+(interface{})(nil)
+
+$ goexec -quiet 'fmt.Println("Use -quiet to disable output of goon; useful if you want to print to stdout.")'
+Use -quiet to disable output of goon; useful if you want to print to stdout.
+
+$ echo '"fmt"' | goexec -stdin 'gist4727543.GetForcedUse'
+(string)("var _ = fmt.Errorf")
 ```
 
 Alternatives
 ------------
 
 -	[gommand](https://github.com/sno6/gommand) - Go one liner program, similar to python -c.
--	[gorram](https://github.com/natefinch/gorram) - Like go run for any go function.
+-	[gorram](https://github.com/natefinch/gorram) - Like go run for any Go function.
 
 License
 -------
