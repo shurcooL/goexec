@@ -95,10 +95,10 @@ func main() {
 
 	// Run `goimports` on the source code.
 	{
-		out, err := imports.Process("", []byte(src), nil)
+		out, err := imports.Process("gen.go", []byte(src), nil)
 		if err != nil {
 			fmt.Fprint(os.Stderr, src)
-			fmt.Fprint(os.Stderr, "imports.Process: gen.go:", err, "\n") // No space after colon so the ouput is like "gen.go:8:18: expected ...".
+			fmt.Fprintln(os.Stderr, "imports.Process:", err) // Output is like "gen.go:8:18: expected ...".
 			os.Exit(1)
 		}
 		src = string(out)
