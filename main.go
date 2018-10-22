@@ -46,7 +46,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	cwd, err := os.Getwd()
+	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -76,7 +76,7 @@ import (
 `
 	}
 	for _, importPath := range importPaths {
-		bpkg, err := build.Import(importPath, cwd, build.FindOnly)
+		bpkg, err := build.Import(importPath, wd, build.FindOnly)
 		if err != nil {
 			log.Fatalln(err)
 		}
