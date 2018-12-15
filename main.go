@@ -11,8 +11,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
+	"strings"
 
-	"github.com/shurcooL/go/trim"
 	"golang.org/x/tools/imports"
 
 	// We need go-goon to be available; this ensures getting goexec will get go-goon too.
@@ -60,7 +60,7 @@ func main() {
 			log.Fatalln(err)
 		}
 
-		cmd += "(" + trim.LastNewline(string(stdin)) + ")"
+		cmd += "(" + strings.TrimSuffix(string(stdin), "\n") + ")"
 	}
 	if !*quietFlag {
 		cmd = "goon.Dump(" + cmd + ")"
