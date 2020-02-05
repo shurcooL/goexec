@@ -72,6 +72,7 @@ Alternatives
 
 -	[gommand](https://github.com/sno6/gommand) - Go one liner program, similar to python -c.
 -	[gorram](https://github.com/natefinch/gorram) - Like go run for any Go function.
+-	[goeval](https://github.com/dolmen-go/goeval) - Run Go snippets instantly from the command-line.
 
 License
 -------
