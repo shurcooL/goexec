@@ -24,6 +24,7 @@ var (
 	stdinFlag    = flag.Bool("stdin", false, "Read func parameters from stdin instead.")
 	nFlag        = flag.Bool("n", false, "Print the generated source but do not run it.")
 	compilerFlag = flag.String("compiler", "gc", `Compiler to use, one of: "gc", "gopherjs".`)
+	tagsFlag     = flag.String("tags", "", "A comma-separated list of build tags to consider satisfied during the build.")
 )
 
 func usage() {
@@ -142,9 +143,9 @@ func run(src string) error {
 	var cmd *exec.Cmd
 	switch *compilerFlag {
 	case "gc":
-		cmd = exec.Command("go", "run", tempFile)
+		cmd = exec.Command("go", "run", "-tags", *tagsFlag, tempFile)
 	case "gopherjs":
-		cmd = exec.Command("gopherjs", "run", tempFile)
+		cmd = exec.Command("gopherjs", "run", "--tags", *tagsFlag, tempFile)
 	}
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout

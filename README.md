@@ -25,6 +25,8 @@ Usage: goexec [flags] [packages] [package.]function(parameters)
     	Do not dump the return values as a goon.
   -stdin
     	Read func parameters from stdin instead.
+  -tags string
+    	A comma-separated list of build tags to consider satisfied during the build.
 ```
 
 Examples
