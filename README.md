@@ -1,15 +1,15 @@
 goexec
 ======
 
-[![Build Status](https://travis-ci.org/shurcooL/goexec.svg?branch=master)](https://travis-ci.org/shurcooL/goexec) [![GoDoc](https://godoc.org/github.com/shurcooL/goexec?status.svg)](https://godoc.org/github.com/shurcooL/goexec)
+[![Go Reference](https://pkg.go.dev/badge/github.com/shurcooL/goexec.svg)](https://pkg.go.dev/github.com/shurcooL/goexec)
 
 goexec is a command line tool to execute Go code. Output is printed as goons to stdout.
 
 Installation
 ------------
 
-```bash
-go get -u github.com/shurcooL/goexec
+```sh
+go install github.com/shurcooL/goexec@latest
 ```
 
 Usage
@@ -32,7 +32,7 @@ Usage: goexec [flags] [packages] [package.]function(parameters)
 Examples
 --------
 
-```bash
+```sh
 $ goexec 'strings.Repeat("Go! ", 5)'
 (string)("Go! Go! Go! Go! Go! ")
 
@@ -79,4 +79,4 @@ Alternatives
 License
 -------
 
--	[MIT License](https://opensource.org/licenses/mit-license.php)
+-	[MIT License](LICENSE)
